@@ -20,94 +20,55 @@ the dataset
 ### PROGRAM:
 #### Import the packages
 ```py
-import pandas as pd
+# Importing Packages
 import matplotlib.pyplot as plt
-```
-#### Read the Airline Passengers dataset from a CSV file
-```py
-data = pd.read_csv("FB.csv", index_col="Date", parse_dates=True)
-```
-#### Display the shape and the first 50 rows of the dataset
-```py
-print(f"Data shape: {data.shape}")
-print(data.head(50))
-```
-#### Plot the first 50 values of the 'Close' column
-```py
-plt.figure(figsize=(12, 6))
-data["Close"].plot(label="Original Data")
-plt.title("Original Electricity Prices")
-plt.xlabel("Date")
-plt.ylabel("Price")
-plt.legend()
-plt.xticks(rotation=45)
-plt.tight_layout()
+import pandas as pd
+import numpy as np
+from statsmodels.tsa.arima_process import ArmaProcess
+
+# Reading Dataset
+data = pd.read_csv("/content/Turbine_Data.csv")
+
+# Generating White Noise
+mean = 0
+std = 1
+n = len(data)
+white_noise = np.random.normal(mean, std, size=n)
+
+data['WhiteNoise'] = white_noise
+w_series = pd.Series(white_noise)
+
+# Applying Moving Average
+window_size = 3
+windows = w_series.rolling(window_size)
+moving_averages = windows.mean()
+
+# Plotting Moving Average Series
+plt.figure(figsize=(18, 6))
+plt.plot(moving_averages)
+plt.title("Moving Average Series", fontsize=14)
+plt.xlabel("Time", fontsize=14)
 plt.show()
-```
-#### Perform rolling average transformation with a window size of 5
-```py
-rolling_mean_5 = data['Close'].rolling(window=5).mean()
-```
-#### Display the first 10 values of the rolling mean
-```py
-print("First 10 values of the rolling mean with window size 5:")
-print(rolling_mean_5.head(10))
-```
-#### Perform rolling average transformation with a window size of 10
-```py
-rolling_mean_10 = data['Close'].rolling(window=10).mean()
-```
-#### Perform MA with window size 5 and 10
-```py
 
-window_sizes = [5, 10]
+# Simulating ARMA Process
+ar1 = np.array([1])
+ma1 = np.array([1, 0.6])
+data_subset = data['ActivePower'].iloc[:100]
+MA_object = ArmaProcess(ar1, ma1)
+simulated_data = MA_object.generate_sample(nsample=100)
+simulated_series = pd.Series(simulated_data, index=data_subset.index)
 
-for window in window_sizes:
-  data["MA_" + str(window)] = data["Close"].rolling(window=window).mean()
-
-print(f"\nMoving Average (Window {window_sizes[0]}): {data['MA_' + str(window_sizes[0])].head(10)}")
-print(f"Moving Average (Window {window_sizes[1]}): {data['MA_' + str(window_sizes[1])].head(10)}")
-
-```
-#### Plot Output of MA vs Original Data
-```py
-plt.figure(figsize=(12, 6))
-
-data[["Close", "MA_" + str(window_sizes[0]), "MA_" + str(window_sizes[1])]].plot()
-plt.title("Electricity Prices with Moving Averages")
-plt.xlabel("Date")
-plt.ylabel("Price")
-plt.grid(True)
-plt.legend()
-plt.xticks(rotation=45)
+# Plotting Simulated MA(1) Series
+plt.plot(simulated_series)
+plt.title("MA(1), $\\theta$ = 0.6")
 plt.show()
-```
-#### Perfomr ES 
-```py
-alpha = 0.2
 
-data["EMA"] = data["Close"].ewm(alpha=alpha, min_periods=0, adjust=False).mean()
-```
-####  Plot Output of ES  vs Original Data
-```py
-data[["Close", "EMA"]].plot()
-plt.title("Electricity Prices with Exponential Smoothing")
-plt.xlabel("Date")
-plt.ylabel("Price")
-plt.grid("True")
-plt.legend()
-plt.xticks(rotation=45)
-plt.tight_layout()
-plt.show()
 ```
 ### OUTPUT:
-#### Plot the original data
-![output](./IMG/1.png)
-#### Plot the original data and fitted value of MA
-![output](./IMG/2.png)
 
-#### Plot the original data and fitted value of EM
-![output](./IMG/3.png)
+<img width="600" alt="image" src="image.png">
+
+<img width="344" alt="image" src="image-1.png">
 
 ### RESULT:
 Thus we have successfully implemented the Moving Average Model and Exponential smoothing using python.
