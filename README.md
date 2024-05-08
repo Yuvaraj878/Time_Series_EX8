@@ -5,18 +5,19 @@
 ### AIM:
 To implement Moving Average Model and Exponential smoothing Using Python.
 ### ALGORITHM:
-1. Import necessary libraries
-2. Read the AirLinePassengers data from a CSV file,Display the shape and the first 20 rows of
-the dataset
-3. Set the figure size for plots
-4. Suppress warnings
-5. Plot the first 50 values of the 'Value' column
-6. Perform rolling average transformation with a window size of 5
-7. Display the first 10 values of the rolling mean
-8. Perform rolling average transformation with a window size of 10
-9. Create a new figure for plotting,Plot the original data and fitted value
-10. Show the plot
-11. Also perform exponential smoothing and plot the graph
+**Step 1:** Import Packages by Loading required libraries.
+
+**Step 2:** Read Dataset, Import data from a CSV file.
+
+**Step 3:** Generate White Noise by Creating random noise with specified mean and standard deviation.
+
+**Step 4:** Apply Moving Average by Calculating moving averages over the noise.
+
+**Step 5:** Plot Moving Average Series and Visualize the moving average data.
+
+**Step 6:** Simulate ARMA Process to Generate data using ARMA model with given coefficients.
+
+**Step 7:** Plot Simulated Series and Display the simulated data.
 ### PROGRAM:
 #### Import the packages
 ```py
